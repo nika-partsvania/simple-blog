@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ArticleDescription } from "./components/article-description/article-description";
+import { ArticleInfo } from "./components/article-info/article-info";
+import { ArticleList } from "./components/article-list/article-list";
+import { ArticleTitle } from "./components/article-title/article-title";
+import { Article } from "./components/article/article";
+import { Footer } from "./components/footer/footer";
+import { Header } from "./components/header/header";
+import { HeroSection } from "./components/hero-section/hero-section";
+import { PageContainer } from "./components/page-container/page-container";
+
+const article = {
+  imageSrc: "https://via.placeholder.com/300",
+  title: "Lorem ipsum, dolor sit amet consectetur adipisicing elit.",
+  desriction:
+    "Ea soluta commodi quam exercitationem tempore molestias illo accusamus, quisquam aliquam eaque tenetur error tempora culpa, illum expedita delectus distinctio, numquam nihil.",
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header />
+
+      <PageContainer>
+        <HeroSection />
+
+        <ArticleList>
+          <Article>
+            <img src={article.imageSrc} alt={article.title} />
+            <ArticleInfo>
+              <ArticleTitle>{article.title}</ArticleTitle>
+              <ArticleDescription>{article.desriction}</ArticleDescription>
+            </ArticleInfo>
+          </Article>
+        </ArticleList>
+      </PageContainer>
+
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
