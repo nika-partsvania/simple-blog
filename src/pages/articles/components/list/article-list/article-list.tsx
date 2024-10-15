@@ -3,13 +3,14 @@ import classes from "./article-list.module.css";
 import ArticleInfo from "@/pages/articles/components/list/article-info/article-info";
 import ArticleTitle from "@/pages/articles/components/list/article-title/article-title";
 import ArticleDescription from "@/pages/articles/components/list/article-description/article-description";
-import { FormEvent, MouseEvent, useReducer } from "react";
+import { MouseEvent, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import ArticleCreateForm from "@/pages/articles/components/list/article-create-form/article-create-form";
 import { articlesInitialState } from "@/pages/articles/components/list/article-list/reducer/state";
 import { articlesReducer } from "@/pages/articles/components/list/article-list/reducer/reducer";
 
 const ArticleList: React.FC = () => {
+  const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
   const [articlesList, dispatch] = useReducer(
     articlesReducer,
     articlesInitialState
@@ -30,13 +31,14 @@ const ArticleList: React.FC = () => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
-  const handleCreateArticle = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const articleFields: any = {};
-    const formData = new FormData(e.currentTarget);
-
-    for (const [key, value] of formData) {
-      articleFields[key] = value;
+  const handleCreateArticle = (articleFields: {
+    title: string;
+    description: string;
+  }) => {
+    if (articleFields.title.length > 8) {
+      setFormValidationErrorMsg(
+        "სათაური უნდა შეიცავდეს 8-ზე ნაკლებ სიმბოლოს !"
+      );
     }
 
     dispatch({ type: "create", payload: { articleFields } });
@@ -67,7 +69,10 @@ const ArticleList: React.FC = () => {
             DESC
           </button>
         </div>
-        <ArticleCreateForm onArticleCreate={handleCreateArticle} />
+        <ArticleCreateForm
+          errorMsg={formValidationErrorMsg}
+          onArticleCreate={handleCreateArticle}
+        />
       </div>
       <section className={classes.root}>
         {articlesList.map((article: any) => {
