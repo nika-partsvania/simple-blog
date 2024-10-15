@@ -1,40 +1,36 @@
-import { ArticleDescription } from "./components/article-description/article-description";
-import { ArticleInfo } from "./components/article-info/article-info";
-import { ArticleList } from "./components/article-list/article-list";
-import { ArticleTitle } from "./components/article-title/article-title";
-import { Article } from "./components/article/article";
-import { Footer } from "./components/footer/footer";
-import { Header } from "./components/header/header";
-import { HeroSection } from "./components/hero-section/hero-section";
-import { PageContainer } from "./components/page-container/page-container";
+import { Routes, Route } from "react-router-dom";
+import DefaultLayout from "./layouts/default";
+import AboutView from "./pages/about/views/about";
+import NotFoundPage from "./pages/404";
+import { lazy, Suspense } from "react";
+import ContactInformationView from "@/pages/contact/views/contact";
+import SingleArticleView from "@/pages/articles/views/single";
+import TestView from "@/pages/test";
 
-const article = {
-  imageSrc: "https://via.placeholder.com/300",
-  title: "Lorem ipsum, dolor sit amet consectetur adipisicing elit.",
-  desriction:
-    "Ea soluta commodi quam exercitationem tempore molestias illo accusamus, quisquam aliquam eaque tenetur error tempora culpa, illum expedita delectus distinctio, numquam nihil.",
-};
+const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
   return (
     <>
-      <Header />
+      <Routes>
+        <Route element={<DefaultLayout />}>
+          <Route path="/" element={<div>Landing</div>} />
+          <Route
+            path="articles"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ArticlesListView />
+              </Suspense>
+            }
+          />
+          <Route path="articles/:id" element={<SingleArticleView />} />
+          <Route path="about" element={<AboutView />} />
+          <Route path="contact" element={<ContactInformationView />} />
+          <Route path="test" element={<TestView />} />
+        </Route>
 
-      <PageContainer>
-        <HeroSection />
-
-        <ArticleList>
-          <Article>
-            <img src={article.imageSrc} alt={article.title} />
-            <ArticleInfo>
-              <ArticleTitle>{article.title}</ArticleTitle>
-              <ArticleDescription>{article.desriction}</ArticleDescription>
-            </ArticleInfo>
-          </Article>
-        </ArticleList>
-      </PageContainer>
-
-      <Footer />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </>
   );
 }

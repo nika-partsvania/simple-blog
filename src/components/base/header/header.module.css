@@ -1,0 +1,30 @@
+.root {
+  top: 0;
+  position: static;
+  display: flex;
+  padding: 1rem;
+}
+
+.logo {
+  color: black;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  padding-left: 48px;
+  gap: 16px;
+}
+
+.nav_item {
+  font-size: 24px;
+  color: black;
+  text-decoration: none;
+}
+
+.active_nav_item {
+  font-size: 24px;
+  color: red;
+  text-decoration: none;
+}

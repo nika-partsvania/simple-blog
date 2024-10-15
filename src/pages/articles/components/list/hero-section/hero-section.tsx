@@ -1,6 +1,6 @@
 import classes from "./hero-section.module.css";
 
-export const HeroSection: React.FC = () => {
+const HeroSection: React.FC = () => {
   return (
     <section className={classes.root}>
       <h2 className={classes.title}>Welcome to My Blog</h2>
@@ -8,3 +8,5 @@ export const HeroSection: React.FC = () => {
     </section>
   );
 };
+
+export default HeroSection;
