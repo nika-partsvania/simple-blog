@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import DefaultLayout from "./layouts/default";
 import AboutView from "./pages/about/views/about";
 import NotFoundPage from "./pages/404";
@@ -13,8 +13,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route element={<DefaultLayout />}>
-          <Route path="/" element={<div>Landing</div>} />
+        <Route path="/:lang" element={<DefaultLayout />}>
           <Route
             path="articles"
             element={
@@ -28,7 +27,7 @@ function App() {
           <Route path="contact" element={<ContactInformationView />} />
           <Route path="test" element={<TestView />} />
         </Route>
-
+        <Route path="/" element={<Navigate to="/ka/articles" />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>

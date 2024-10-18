@@ -20,16 +20,16 @@ export const Header: FC = () => {
         <h1>Simple Blog</h1>
       </Link>
       <div className={classes.nav}>
-        <NavLink className={handleActiveNav} to="/articles">
+        <NavLink className={handleActiveNav} to="articles">
           Articles
         </NavLink>
-        <NavLink className={handleActiveNav} to="/about">
+        <NavLink className={handleActiveNav} to="about">
           About
         </NavLink>
-        <NavLink className={handleActiveNav} to="/contact">
+        <NavLink className={handleActiveNav} to="contact">
           Contact
         </NavLink>
-        <NavLink className={handleActiveNav} to="/test">
+        <NavLink className={handleActiveNav} to="test">
           Test
         </NavLink>
       </div>
