@@ -23,7 +23,7 @@ const handleUpvoteArticle = (articlesList: any, id: any) => {
 
 export const articlesReducer = (
   articlesList: ArticlesReducerInitialState,
-  action: ArticlesReducerAction
+  action: ArticlesReducerAction,
 ) => {
   if (action.type === "upvote") {
     return handleUpvoteArticle(articlesList, action.payload.id);

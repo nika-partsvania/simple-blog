@@ -13,7 +13,7 @@ const ArticleList: React.FC = () => {
   const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
   const [articlesList, dispatch] = useReducer(
     articlesReducer,
-    articlesInitialState
+    articlesInitialState,
   );
 
   const handleArticleUpvote = (id: string) => {
@@ -37,7 +37,7 @@ const ArticleList: React.FC = () => {
   }) => {
     if (articleFields.title.length > 8) {
       setFormValidationErrorMsg(
-        "სათაური უნდა შეიცავდეს 8-ზე ნაკლებ სიმბოლოს !"
+        "სათაური უნდა შეიცავდეს 8-ზე ნაკლებ სიმბოლოს !",
       );
     }
 

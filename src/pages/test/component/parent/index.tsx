@@ -1,5 +1,5 @@
-import { PropsWithChildren, useCallback, useState } from 'react';
-import Child from '../child';
+import { PropsWithChildren, useCallback, useState } from "react";
+import Child from "../child";
 
 const Parent: React.FC<PropsWithChildren> = ({ children }) => {
   const [count, setCount] = useState(0);
