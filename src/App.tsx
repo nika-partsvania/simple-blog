@@ -1,8 +1,8 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DefaultLayout from "./layouts/default";
 import AboutView from "./pages/about/views/about";
 import NotFoundPage from "./pages/404";
-import { lazy, Suspense } from "react";
 import ContactInformationView from "@/pages/contact/views/contact";
 import SingleArticleView from "@/pages/articles/views/single";
 import TestView from "@/pages/test";
@@ -10,8 +10,6 @@ import TestView from "@/pages/test";
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
-  // const [count, setCount] = useState<number>(0);
-
   return (
     <Routes>
       <Route path="/:lang" element={<DefaultLayout />}>
