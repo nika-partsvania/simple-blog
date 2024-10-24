@@ -10,6 +10,9 @@ import TestView from "@/pages/test";
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
+  //@ts-ignore
+  // const [count, setCount] = useState<number>(0);
+
   return (
     <>
       <Routes>
