@@ -10,30 +10,27 @@ import TestView from "@/pages/test";
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
-  //@ts-ignore
   // const [count, setCount] = useState<number>(0);
 
   return (
-    <>
-      <Routes>
-        <Route path="/:lang" element={<DefaultLayout />}>
-          <Route
-            path="articles"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ArticlesListView />
-              </Suspense>
-            }
-          />
-          <Route path="articles/:id" element={<SingleArticleView />} />
-          <Route path="about" element={<AboutView />} />
-          <Route path="contact" element={<ContactInformationView />} />
-          <Route path="test" element={<TestView />} />
-        </Route>
-        <Route path="/" element={<Navigate to="/ka/articles" />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/:lang" element={<DefaultLayout />}>
+        <Route
+          path="articles"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <ArticlesListView />
+            </Suspense>
+          }
+        />
+        <Route path="articles/:id" element={<SingleArticleView />} />
+        <Route path="about" element={<AboutView />} />
+        <Route path="contact" element={<ContactInformationView />} />
+        <Route path="test" element={<TestView />} />
+      </Route>
+      <Route path="/" element={<Navigate to="/ka/articles" />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
 
