@@ -13,15 +13,9 @@ function App() {
   return (
     <>
       <Routes>
-                    <Route path="/:lang" element={<DefaultLayout />}>
-         
-         
-         
+        <Route path="/:lang" element={<DefaultLayout />}>
           <Route
             path="articles"
-
-
-            
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <ArticlesListView />
