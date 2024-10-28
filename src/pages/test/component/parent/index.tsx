@@ -1,26 +1,19 @@
-import { PropsWithChildren, useCallback, useState } from "react";
+import { PropsWithChildren, useRef } from "react";
 import Child from "../child";
 
-const Parent: React.FC<PropsWithChildren> = ({ children }) => {
-  const [count, setCount] = useState(0);
+const Parent: React.FC<PropsWithChildren> = () => {
+  const inputRef = useRef<any>(null);
 
-  const handleIncreaseCount = useCallback(() => {
-    setCount((prevCount) => {
-      return prevCount + 1;
-    });
-  }, []);
+  const handleParentBtnClick = () => {
+    inputRef?.current?.sumOneAndTwo();
+  };
 
   return (
-    <div>
-      <div>Count - {count} </div>
-      <Child handleIncreaseCount={handleIncreaseCount} />
-      {children}
-    </div>
+    <>
+      <button onClick={handleParentBtnClick}>Parent Button</button>
+      <Child title="Child Button" ref={inputRef} />
+    </>
   );
 };
 
 export default Parent;
-
-// useMemo - value
-// useCallback - function
-// memo - component

@@ -1,31 +1,46 @@
-import { useState, useRef } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 const TestView = () => {
-  const [startTime, setStartTime] = useState(0);
-  const [now, setNow] = useState(0);
+  const [inputs] = useState([
+    { value: "" },
+    { value: "" },
+    { value: "" },
+    { value: "" },
+  ]);
 
-  const intervalId = useRef<any>(null);
+  const inputRefs = useRef<any>({});
 
-  const handleStartTimer = () => {
-    setStartTime(Date.now());
-    setNow(Date.now());
-
-    intervalId.current = setInterval(() => {
-      setNow(Date.now());
-    }, 10);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    if (e.target.value) {
+      console.log("Next");
+      inputRefs?.current[index + 1]?.focus();
+    }
   };
-
-  const handleStopTimer = () => {
-    clearInterval(intervalId.current);
-  };
-
-  const timePassed = (now - startTime) / 1000;
 
   return (
-    <div style={{ minHeight: "100vh", padding: 100 }}>
-      <div onClick={handleStartTimer}>Start Timer</div>
-      <div onClick={handleStopTimer}>Stop</div>
-      <div>Time Passed: {timePassed}</div>
+    <div
+      style={{
+        padding: 100,
+        display: "flex",
+        gap: 8,
+      }}
+    >
+      {inputs.map((input, index) => {
+        return (
+          <input
+            ref={(element) => {
+              if (index === 0) {
+                element?.focus();
+              }
+
+              inputRefs.current[index] = element;
+            }}
+            key={index}
+            onChange={(e) => handleChange(e, index)}
+            style={{ width: 60 }}
+          />
+        );
+      })}
     </div>
   );
 };

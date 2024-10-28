@@ -1,14 +1,21 @@
-import { memo } from "react";
+import { forwardRef, memo, useImperativeHandle } from "react";
 
-const Child: React.FC<{ handleIncreaseCount: () => void }> = ({
-  handleIncreaseCount,
-}) => {
-  console.log("Child is Rerendering");
-  return (
-    <div>
-      <div onClick={handleIncreaseCount}>(CHILD) - Increase Count</div>
-    </div>
-  );
-};
+type Ref = any;
+
+type Props = { title: string };
+
+const Child = forwardRef<Ref, Props>(({ title }, ref) => {
+  const handleSumOneAndTwo = () => {
+    console.log(1 + 2);
+  };
+
+  useImperativeHandle(ref, () => {
+    return {
+      sumOneAndTwo: handleSumOneAndTwo,
+    };
+  }, []);
+
+  return <button>{title}</button>;
+});
 
 export default memo(Child);
