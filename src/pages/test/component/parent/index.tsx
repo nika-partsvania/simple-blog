@@ -4,9 +4,10 @@ import Child from "../child";
 const Parent: React.FC<PropsWithChildren> = () => {
   const inputRef = useRef<any>(null);
 
-  const handleParentBtnClick = () => {
-    inputRef?.current?.sumOneAndTwo();
-  };
+  const handleParentBtnClick: React.ComponentProps<"button">["onClick"] =
+    () => {
+      inputRef?.current?.sumOneAndTwo();
+    };
 
   return (
     <>
