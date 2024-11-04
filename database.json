@@ -1,8 +1,25 @@
 {
   "countries": [
     {
+      "id": "1",
+      "name": "საქართველო",
+      "visited": true
+    },
+    {
+      "id": "2",
+      "name": "ამერიკა",
+      "visited": true
+    },
+    {
+      "id": "3",
+      "name": "იტალია",
+      "visited": true
+    }
+  ],
+  "cities": [
+    {
       "id": 1,
-      "name": "საქართველო"
+      "name": "თბილისი"
     }
   ]
 }
