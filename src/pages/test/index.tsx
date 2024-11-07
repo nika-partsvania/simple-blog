@@ -1,5 +1,6 @@
-import { getCountries, updateCountry } from "@/api/countries";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { getCountries } from "@/api/countries";
+import CountryItem from "@/pages/test/country";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 const TestView = () => {
@@ -7,7 +8,7 @@ const TestView = () => {
     data: countriesList,
     isLoading: areCountriesLoading,
     isError: areCountriesErrored,
-    refetch: refetchCountries,
+    // refetch: refetchCountries,
   } = useQuery({
     queryKey: ["countries-list"],
     queryFn: getCountries,
@@ -19,34 +20,22 @@ const TestView = () => {
 
   useEffect(() => {}, []);
 
-  const { mutate } = useMutation({ mutationFn: updateCountry });
-
   return (
-    <div style={{ margin: 48, fontSize: 48 }}>
-      <button
-        onClick={() => {
-          mutate(
-            { id: 1, payload: { visited: true } },
-            {
-              onSuccess: () => {
-                refetchCountries();
-              },
-            },
+    <>
+      <div style={{ margin: 48, fontSize: 48 }}>
+        {areCountriesLoading ? "Loading ...." : null}
+        {areCountriesErrored ? "Error" : null}
+        {countriesList?.map((country) => {
+          return (
+            <CountryItem
+              key={country.id}
+              id={country.id}
+              countryName={country.name}
+            />
           );
-        }}
-      >
-        Update Italy
-      </button>
-      {areCountriesLoading ? "Loading ...." : null}
-      {areCountriesErrored ? "Error" : null}
-      {countriesList?.map((country: any) => {
-        return (
-          <div>
-            {country.name} - {country.visited ? " Visited" : " Not Visited"}
-          </div>
-        );
-      })}
-    </div>
+        })}
+      </div>
+    </>
   );
 };
 

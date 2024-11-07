@@ -8,12 +8,77 @@
     {
       "id": "2",
       "name": "ამერიკა",
-      "visited": true
+      "visited": false
     },
     {
       "id": "3",
       "name": "იტალია",
       "visited": true
+    },
+    {
+      "id": "4",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "5",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "6",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "7",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "8",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "9",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "10",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "11",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "12",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "13",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "14",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "15",
+      "name": "იტალია",
+      "visited": false
+    },
+    {
+      "id": "16",
+      "name": "იტალია",
+      "visited": false
     }
   ],
   "cities": [
