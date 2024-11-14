@@ -1,20 +1,20 @@
-import Card from "@/pages/test/card";
+import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 
 const TestView = () => {
-  // const handleToggleTheme = () => {
-  //   const html = document.querySelector("html");
-  //   html?.classList.toggle("dark");
-  // };
+  const { t } = useTranslation();
+
+  const handleChangeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   return (
     <>
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card type="vertical" />
-      <Card />
-      <Card type="vertical" />
+      <div className="flex flex-col items-center justify-center">
+        <button onClick={() => handleChangeLanguage("ka")}>GEO</button>
+        <button onClick={() => handleChangeLanguage("en")}>ENG</button>
+        <div>{t("test-page.lang-version")}</div>
+      </div>
     </>
   );
 };
