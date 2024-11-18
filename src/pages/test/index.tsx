@@ -1,21 +1,57 @@
-import i18n from "i18next";
-import { useTranslation } from "react-i18next";
+import { register } from "@/supabase/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 const TestView = () => {
-  const { t } = useTranslation();
+  const [registerPayload, setRegisterPayload] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleChangeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
+  const { mutate: handleRegister } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: register,
+  });
+
+  const handleSubmit = () => {
+    const isEmailFilled = !!registerPayload.email;
+    const isPasswordFilled = !!registerPayload.password;
+
+    if (isEmailFilled && isPasswordFilled) {
+      handleRegister(registerPayload);
+    }
   };
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center">
-        <button onClick={() => handleChangeLanguage("ka")}>GEO</button>
-        <button onClick={() => handleChangeLanguage("en")}>ENG</button>
-        <div>{t("test-page.lang-version")}</div>
-      </div>
-    </>
+    <div className="flex flex-col items-center justify-center gap-y-4">
+      <label>Email</label>
+      <input
+        className="border border-black"
+        name="email"
+        value={registerPayload.email}
+        onChange={(e) => {
+          setRegisterPayload({
+            email: e.target.value,
+            password: registerPayload.password,
+          });
+        }}
+      />
+      <label>Password</label>
+      <input
+        type="password"
+        className="border border-black"
+        name="password"
+        value={registerPayload.password}
+        onChange={(e) => {
+          setRegisterPayload({
+            email: registerPayload.email,
+            password: e.target.value,
+          });
+        }}
+      />
+
+      <button onClick={handleSubmit}>SUBMIT</button>
+    </div>
   );
 };
 

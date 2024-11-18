@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DefaultLayout from "./layouts/default";
 import AboutView from "./pages/about/views/about";
@@ -7,10 +7,15 @@ import ContactInformationView from "@/pages/contact/views/contact";
 import SingleArticleView from "@/pages/articles/views/single";
 import CountriesListView from "@/pages/test";
 import SingleCountryView from "@/pages/test/single-test";
+import { getCountries } from "@/api/countries";
 
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
+  useEffect(() => {
+    getCountries();
+  }, []);
+
   return (
     <Routes>
       <Route path="/:lang" element={<DefaultLayout />}>
