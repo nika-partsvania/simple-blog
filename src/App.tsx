@@ -7,14 +7,32 @@ import ContactInformationView from "@/pages/contact/views/contact";
 import SingleArticleView from "@/pages/articles/views/single";
 import CountriesListView from "@/pages/test";
 import SingleCountryView from "@/pages/test/single-test";
-import { getCountries } from "@/api/countries";
+import LoginView from "@/pages/auth/view/login";
+import { supabase } from "@/supabase";
+import AuthGuard from "@/components/route-guards/auth";
+import { useSetAtom } from "jotai";
+import { userAtom } from "@/store/auth";
+import ProfileView from "@/pages/account/view/profile";
 
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
+  // const [, setUser] = useSetAtom(userAtom);
+  const setUser = useSetAtom(userAtom);
+
   useEffect(() => {
-    getCountries();
-  }, []);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setUser]);
 
   return (
     <Routes>
@@ -28,8 +46,17 @@ function App() {
           }
         />
         <Route path="articles/:id" element={<SingleArticleView />} />
-        <Route path="about" element={<AboutView />} />
+        <Route
+          path="about"
+          element={
+            <AuthGuard>
+              <AboutView />
+            </AuthGuard>
+          }
+        />
         <Route path="contact" element={<ContactInformationView />} />
+        <Route path="login" element={<LoginView />} />
+        <Route path="profile" element={<ProfileView />} />
         <Route path="test" element={<CountriesListView />} />
         <Route path="test/:id" element={<SingleCountryView />} />
       </Route>
