@@ -1,56 +1,121 @@
-import { register } from "@/supabase/auth";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+
+export type FormValues = {
+  email: string;
+  password: string;
+  building: { name: string }[];
+};
+
+export const FormDefaultValues: FormValues = {
+  email: "",
+  password: "",
+  building: [{ name: "" }],
+};
 
 const TestView = () => {
-  const [registerPayload, setRegisterPayload] = useState({
-    email: "",
-    password: "",
+  const { control, handleSubmit, setValue } = useFormContext<FormValues>();
+
+  const { fields, append, remove } = useFieldArray<FormValues>({
+    name: "building",
+    control,
   });
 
-  const { mutate: handleRegister } = useMutation({
-    mutationKey: ["register"],
-    mutationFn: register,
-  });
+  const onSubmit = (fieldValues: any) => {
+    console.log(fieldValues);
+  };
 
-  const handleSubmit = () => {
-    const isEmailFilled = !!registerPayload.email;
-    const isPasswordFilled = !!registerPayload.password;
+  const handleAddBuilding = (e: any) => {
+    e.preventDefault();
 
-    if (isEmailFilled && isPasswordFilled) {
-      handleRegister(registerPayload);
-    }
+    append({ name: "" });
+  };
+
+  const handleRemoveBuilding = (index: number) => {
+    remove(index);
   };
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-4">
       <label>Email</label>
-      <input
-        className="border border-black"
+      <Controller
         name="email"
-        value={registerPayload.email}
-        onChange={(e) => {
-          setRegisterPayload({
-            email: e.target.value,
-            password: registerPayload.password,
-          });
-        }}
-      />
-      <label>Password</label>
-      <input
-        type="password"
-        className="border border-black"
-        name="password"
-        value={registerPayload.password}
-        onChange={(e) => {
-          setRegisterPayload({
-            email: registerPayload.email,
-            password: e.target.value,
-          });
+        control={control}
+        render={({ field: { onChange, value } }) => {
+          return (
+            <input
+              onChange={onChange}
+              value={value}
+              className="border border-black"
+            />
+          );
         }}
       />
 
-      <button onClick={handleSubmit}>SUBMIT</button>
+      <label>Password</label>
+      <Controller
+        name="password"
+        control={control}
+        render={({ field: { value, onChange } }) => {
+          return (
+            <input
+              value={value}
+              onChange={onChange}
+              type="password"
+              className="border border-black"
+            />
+          );
+        }}
+      />
+      {fields.map((field, index) => {
+        return (
+          <div className="flex flex-col border border-black p-2" key={field.id}>
+            <div>Building {index + 1}</div>
+            {index === 0 ? null : (
+              <button
+                onClick={() => handleRemoveBuilding(index)}
+                className="mt-6 text-red-500"
+              >
+                Remove Building
+              </button>
+            )}
+            <Controller
+              // @ts-ignore
+              name={`building.${index}.name`}
+              control={control}
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <input
+                    value={value}
+                    onChange={onChange}
+                    className="border border-black"
+                  />
+                );
+              }}
+            />
+          </div>
+        );
+      })}
+
+      <button onClick={handleAddBuilding}>Add Building</button>
+
+      <button type="submit" onClick={handleSubmit(onSubmit)}>
+        SUBMIT
+      </button>
+      <button
+        onClick={() => {
+          setValue("email", "Raghac@gmail.com");
+          setValue("password", "password");
+          setValue("building", [{ name: "building" }]);
+
+          // reset({
+          //   email: "Raghac@gmail.com",
+          //   password: "raghac",
+          //   building: [{ name: "building" }],
+          // });
+        }}
+      >
+        Insert Random Values
+      </button>
     </div>
   );
 };

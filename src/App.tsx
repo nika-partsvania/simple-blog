@@ -5,7 +5,7 @@ import AboutView from "./pages/about/views/about";
 import NotFoundPage from "./pages/404";
 import ContactInformationView from "@/pages/contact/views/contact";
 import SingleArticleView from "@/pages/articles/views/single";
-import CountriesListView from "@/pages/test";
+import TestView, { FormDefaultValues, FormValues } from "@/pages/test";
 import SingleCountryView from "@/pages/test/single-test";
 import LoginView from "@/pages/auth/view/login";
 import { supabase } from "@/supabase";
@@ -13,10 +13,15 @@ import AuthGuard from "@/components/route-guards/auth";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/store/auth";
 import ProfileView from "@/pages/account/view/profile";
+import { FormProvider, useForm } from "react-hook-form";
 
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
+  const formMethods = useForm<FormValues>({
+    defaultValues: FormDefaultValues,
+  });
+
   // const [, setUser] = useSetAtom(userAtom);
   const setUser = useSetAtom(userAtom);
 
@@ -57,7 +62,14 @@ function App() {
         <Route path="contact" element={<ContactInformationView />} />
         <Route path="login" element={<LoginView />} />
         <Route path="profile" element={<ProfileView />} />
-        <Route path="test" element={<CountriesListView />} />
+        <Route
+          path="test"
+          element={
+            <FormProvider {...formMethods}>
+              <TestView />
+            </FormProvider>
+          }
+        />
         <Route path="test/:id" element={<SingleCountryView />} />
       </Route>
       <Route path="/" element={<Navigate to="/ka/articles" />} />
