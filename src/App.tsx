@@ -5,7 +5,7 @@ import AboutView from "./pages/about/views/about";
 import NotFoundPage from "./pages/404";
 import ContactInformationView from "@/pages/contact/views/contact";
 import SingleArticleView from "@/pages/articles/views/single";
-import TestView, { FormDefaultValues, FormValues } from "@/pages/test";
+import TestView from "@/pages/test";
 import SingleCountryView from "@/pages/test/single-test";
 import LoginView from "@/pages/auth/view/login";
 import { supabase } from "@/supabase";
@@ -18,9 +18,7 @@ import { FormProvider, useForm } from "react-hook-form";
 const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
 
 function App() {
-  const formMethods = useForm<FormValues>({
-    defaultValues: FormDefaultValues,
-  });
+  const formMethods = useForm();
 
   // const [, setUser] = useSetAtom(userAtom);
   const setUser = useSetAtom(userAtom);

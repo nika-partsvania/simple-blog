@@ -7,22 +7,9 @@ const axiosConfig: CreateAxiosDefaults = {
 
 export const httpClient = axios.create(axiosConfig);
 
-httpClient.interceptors.request.use((req) => {
-  const accessToken =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.MW-----yKxaFL3B3mJinypUdkCQIPTuHIR63Wj73azgHaQ";
-
-  req.headers.Authorization = accessToken;
-
-  console.log("ეს არის Request-ის გასვლის წერტილი");
-
-  console.log(req);
-
-  return req;
-});
-
-httpClient.interceptors.response.use((res) => {
-  return res;
-});
+export const setAuthorizationHeader = (accessToken: string) => {
+  httpClient.defaults.headers["Authorization"] = accessToken;
+};
 
 // APP -> Request -> Interceptor -> Backend -> Response -> APP
 

@@ -1,123 +1,114 @@
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Button } from "@/components/common/button";
+import { Input } from "@/components/common/input";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginFormSchema } from "@/pages/test/schema";
+import { useTranslation } from "react-i18next";
 
-export type FormValues = {
-  email: string;
+type FormValues = {
+  username: string;
   password: string;
-  building: { name: string }[];
-};
-
-export const FormDefaultValues: FormValues = {
-  email: "",
-  password: "",
-  building: [{ name: "" }],
+  tag: string[];
 };
 
 const TestView = () => {
-  const { control, handleSubmit, setValue } = useFormContext<FormValues>();
+  const { t } = useTranslation();
 
-  const { fields, append, remove } = useFieldArray<FormValues>({
-    name: "building",
+  const {
     control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: { username: "", password: "", tag: [] },
   });
 
-  const onSubmit = (fieldValues: any) => {
-    console.log(fieldValues);
-  };
+  console.log(errors);
 
-  const handleAddBuilding = (e: any) => {
-    e.preventDefault();
-
-    append({ name: "" });
-  };
-
-  const handleRemoveBuilding = (index: number) => {
-    remove(index);
+  const onSubmit = (values: FormValues) => {
+    console.log(values);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-4">
-      <label>Email</label>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field: { onChange, value } }) => {
-          return (
-            <input
-              onChange={onChange}
-              value={value}
-              className="border border-black"
-            />
-          );
-        }}
-      />
-
-      <label>Password</label>
-      <Controller
-        name="password"
-        control={control}
-        render={({ field: { value, onChange } }) => {
-          return (
-            <input
-              value={value}
-              onChange={onChange}
-              type="password"
-              className="border border-black"
-            />
-          );
-        }}
-      />
-      {fields.map((field, index) => {
-        return (
-          <div className="flex flex-col border border-black p-2" key={field.id}>
-            <div>Building {index + 1}</div>
-            {index === 0 ? null : (
-              <button
-                onClick={() => handleRemoveBuilding(index)}
-                className="mt-6 text-red-500"
-              >
-                Remove Building
-              </button>
-            )}
-            <Controller
-              // @ts-ignore
-              name={`building.${index}.name`}
-              control={control}
-              render={({ field: { onChange, value } }) => {
-                return (
-                  <input
-                    value={value}
-                    onChange={onChange}
-                    className="border border-black"
-                  />
-                );
-              }}
-            />
-          </div>
-        );
-      })}
-
-      <button onClick={handleAddBuilding}>Add Building</button>
-
-      <button type="submit" onClick={handleSubmit(onSubmit)}>
-        SUBMIT
-      </button>
-      <button
-        onClick={() => {
-          setValue("email", "Raghac@gmail.com");
-          setValue("password", "password");
-          setValue("building", [{ name: "building" }]);
-
-          // reset({
-          //   email: "Raghac@gmail.com",
-          //   password: "raghac",
-          //   building: [{ name: "building" }],
-          // });
-        }}
-      >
-        Insert Random Values
-      </button>
+    <div className="flex items-center justify-center">
+      <div className="flex w-96 flex-col items-center justify-center gap-6">
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            return (
+              <>
+                <Input
+                  placeholder="Username"
+                  value={value}
+                  onChange={onChange}
+                />
+                {error?.message ? (
+                  <span className="text-red-500">
+                    {t(`test-page.${error.message}`)}
+                  </span>
+                ) : null}
+              </>
+            );
+          }}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => {
+            return (
+              <Input placeholder="Password" value={value} onChange={onChange} />
+            );
+          }}
+        />
+        <Controller
+          control={control}
+          name="tag"
+          render={({ field: { onChange, value } }) => {
+            return (
+              <Input
+                placeholder="Tag"
+                value={value[0]}
+                onChange={(e) => {
+                  onChange([e.target.value]);
+                }}
+              />
+            );
+          }}
+        />
+        <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+      </div>
     </div>
   );
 };
 
 export default TestView;
+
+// import { setAuthorizationHeader } from "@/api";
+// import { updateCountry } from "@/api/countries";
+// import { Button } from "@/components/common/button";
+// import { fakeLogin } from "@/pages/test/utils/fake-login";
+
+// const TestView = () => {
+//   const handleLogin = () => {
+//     fakeLogin().then((res: any) => {
+//       console.log(res);
+//       localStorage.setItem("accessToken", res.accessToken);
+
+//       setAuthorizationHeader(res.accessToken);
+//     });
+//   };
+
+//   const handleCreateCounty = () => {
+//     updateCountry({ id: 1, payload: {} });
+//   };
+
+//   return (
+//     <div className="flex flex-col items-center justify-center gap-6">
+//       <Button onClick={handleLogin}>Login</Button>
+//       <Button onClick={handleCreateCounty}>Update Country</Button>
+//     </div>
+//   );
+// };
+
+// export default TestView;
