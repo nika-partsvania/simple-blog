@@ -1,18 +1,11 @@
 import { Link, NavLink, NavLinkRenderProps } from "react-router-dom";
 
 import classes from "./header.module.css";
-import { useMutation } from "@tanstack/react-query";
-import { logout } from "@/supabase/auth";
-import { useAtomValue } from "jotai";
-import { userAtom } from "@/store/auth";
+
+import { useAuthContext } from "@/context/auth/hooks/useAuthContext";
 
 export const Header: React.FC = () => {
-  const user = useAtomValue(userAtom);
-
-  const { mutate: handleLogout } = useMutation({
-    mutationKey: ["logout"],
-    mutationFn: logout,
-  });
+  const { user } = useAuthContext();
 
   const handleActiveNav = (props: NavLinkRenderProps) => {
     const { isActive } = props;
@@ -44,15 +37,8 @@ export const Header: React.FC = () => {
         </NavLink>
       </div>
       <div className="flex w-full items-center justify-end text-blue-400">
-        {user ? (
-          <div className="flex gap-x-6">
-            <NavLink className={handleActiveNav} to="profile">
-              Profile
-            </NavLink>
-            <span onClick={() => handleLogout()} className="cursor-pointer">
-              Logout
-            </span>
-          </div>
+        {user?.fullName ? (
+          <div className="flex gap-x-6">{user?.fullName}</div>
         ) : (
           <NavLink className={handleActiveNav} to="login">
             Login

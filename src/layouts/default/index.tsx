@@ -4,7 +4,7 @@ import { PageContainer } from "../../components/base/page-container/page-contain
 
 import { Outlet } from "react-router-dom";
 
-const DefaultLayout = () => {
+const DashboardLayout = () => {
   return (
     <>
       <Header />
@@ -16,4 +16,4 @@ const DefaultLayout = () => {
   );
 };
 
-export default DefaultLayout;
+export default DashboardLayout;

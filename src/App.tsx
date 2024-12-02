@@ -1,21 +1,16 @@
-import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import DefaultLayout from "./layouts/default";
-import AboutView from "./pages/about/views/about";
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import DashboardLayout from "./layouts/default";
 import NotFoundPage from "./pages/404";
-import ContactInformationView from "@/pages/contact/views/contact";
-import SingleArticleView from "@/pages/articles/views/single";
 import TestView from "@/pages/test";
 import SingleCountryView from "@/pages/test/single-test";
 import LoginView from "@/pages/auth/view/login";
 import { supabase } from "@/supabase";
-import AuthGuard from "@/components/route-guards/auth";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/store/auth";
-import ProfileView from "@/pages/account/view/profile";
 import { FormProvider, useForm } from "react-hook-form";
-
-const ArticlesListView = lazy(() => import("./pages/articles/views/list"));
+import RegisterView from "@/pages/auth/view/register";
+import AuthLayout from "@/layouts/auth";
 
 function App() {
   const formMethods = useForm();
@@ -39,38 +34,23 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/:lang" element={<DefaultLayout />}>
-        <Route
-          path="articles"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <ArticlesListView />
-            </Suspense>
-          }
-        />
-        <Route path="articles/:id" element={<SingleArticleView />} />
-        <Route
-          path="about"
-          element={
-            <AuthGuard>
-              <AboutView />
-            </AuthGuard>
-          }
-        />
-        <Route path="contact" element={<ContactInformationView />} />
-        <Route path="login" element={<LoginView />} />
-        <Route path="profile" element={<ProfileView />} />
-        <Route
-          path="test"
-          element={
-            <FormProvider {...formMethods}>
-              <TestView />
-            </FormProvider>
-          }
-        />
-        <Route path="test/:id" element={<SingleCountryView />} />
+      <Route path="/:lang">
+        <Route path="auth" element={<AuthLayout />}>
+          <Route path="login" element={<LoginView />} />
+          <Route path="register" element={<RegisterView />} />
+        </Route>
+        <Route path="dashboard" element={<DashboardLayout />}>
+          <Route
+            path="test"
+            element={
+              <FormProvider {...formMethods}>
+                <TestView />
+              </FormProvider>
+            }
+          />
+          <Route path="test/:id" element={<SingleCountryView />} />
+        </Route>
       </Route>
-      <Route path="/" element={<Navigate to="/ka/articles" />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

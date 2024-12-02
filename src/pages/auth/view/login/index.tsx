@@ -1,62 +1,73 @@
-import { login } from "@/supabase/auth";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { SignInPayload } from "@/api/auth/index.types";
+import { Button } from "@/components/common/button";
+import { Input } from "@/components/ui/input";
+import { queryClient } from "@/main";
+import { SignInSchema } from "@/pages/auth/view/login/schema";
+import { afterSignInSuccess } from "@/pages/auth/view/login/utils";
+import { useSignIn } from "@/react-query/mutation/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+
+type SignInFormValues = SignInPayload["payload"];
+
+const signInFormDefaultValues: SignInFormValues = {
+  email: "",
+  password: "",
+};
 
 const LoginView = () => {
   const navigate = useNavigate();
-  const [loginPayload, setLoginPayload] = useState({
-    email: "",
-    password: "",
+
+  const { control, handleSubmit } = useForm<SignInFormValues>({
+    defaultValues: signInFormDefaultValues,
+    resolver: zodResolver(SignInSchema),
   });
 
-  const { mutate: handleLogin } = useMutation({
-    mutationKey: ["login"],
-    mutationFn: login,
-    onSuccess: () => {
-      navigate("/ka/articles");
-    },
-  });
+  const { mutate: handleSignIn } = useSignIn();
 
-  const handleSubmit = () => {
-    const isEmailFilled = !!loginPayload.email;
-    const isPasswordFilled = !!loginPayload.password;
+  const onSubmit = (signInPayload: SignInFormValues) => {
+    handleSignIn(
+      { payload: signInPayload },
+      {
+        onSuccess: (res) => {
+          afterSignInSuccess({
+            accessToken: res.accessToken,
+            refreshToken: res.refreshToken,
+          });
+          navigate("/ka/dashboard/test");
+          console.log("hey");
 
-    if (isEmailFilled && isPasswordFilled) {
-      handleLogin(loginPayload);
-    }
+          queryClient.invalidateQueries({ queryKey: ["me"] });
+        },
+      },
+    );
   };
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-4">
-      <h1 className="text-2xl font-bold">Login</h1>
-      <label>Email</label>
-      <input
-        className="border border-black"
-        name="email"
-        value={loginPayload.email}
-        onChange={(e) => {
-          setLoginPayload({
-            email: e.target.value,
-            password: loginPayload.password,
-          });
-        }}
-      />
-      <label>Password</label>
-      <input
-        type="password"
-        className="border border-black"
-        name="password"
-        value={loginPayload.password}
-        onChange={(e) => {
-          setLoginPayload({
-            email: loginPayload.email,
-            password: e.target.value,
-          });
-        }}
-      />
+      <div className="flex w-96 flex-col items-center justify-center gap-y-4">
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => {
+            return (
+              <Input onChange={onChange} value={value} placeholder="Email" />
+            );
+          }}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => {
+            return (
+              <Input onChange={onChange} value={value} placeholder="Password" />
+            );
+          }}
+        />
 
-      <button onClick={handleSubmit}>SUBMIT</button>
+        <Button onClick={handleSubmit(onSubmit)}>Sign In</Button>
+      </div>
     </div>
   );
 };
