@@ -7,7 +7,7 @@ import { afterSignInSuccess } from "@/pages/auth/view/login/utils";
 import { useSignIn } from "@/react-query/mutation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type SignInFormValues = SignInPayload["payload"];
 
@@ -17,6 +17,12 @@ const signInFormDefaultValues: SignInFormValues = {
 };
 
 const LoginView = () => {
+  const location = useLocation();
+
+  const toNavigate =
+    location?.state?.from?.pathname + location?.state?.from?.search ||
+    "/ka/dashboard/test";
+
   const navigate = useNavigate();
 
   const { control, handleSubmit } = useForm<SignInFormValues>({
@@ -35,8 +41,8 @@ const LoginView = () => {
             accessToken: res.accessToken,
             refreshToken: res.refreshToken,
           });
-          navigate("/ka/dashboard/test");
-          console.log("hey");
+
+          navigate(toNavigate);
 
           queryClient.invalidateQueries({ queryKey: ["me"] });
         },

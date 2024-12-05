@@ -17,6 +17,7 @@ export const useGetMe = ({
     queryKey: ["me"],
     queryFn: me,
     retry: 0,
+    gcTime: 1000 * 60 * 2,
     refetchOnWindowFocus: false,
     enabled: isEnabled,
   });

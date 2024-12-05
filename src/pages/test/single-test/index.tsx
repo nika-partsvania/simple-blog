@@ -12,8 +12,6 @@ const SingleCountryView = () => {
     staleTime: 1000 * 60,
   });
 
-  console.log(data);
-
   return <div style={{ margin: 48 }}>{data?.data?.name}</div>;
 };
 

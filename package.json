@@ -29,6 +29,7 @@
     "jotai": "^2.10.3",
     "json-server": "^1.0.0-beta.3",
     "lucide-react": "^0.456.0",
+    "qs": "^6.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.2",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/node": "^22.8.1",
+    "@types/qs": "^6.9.17",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

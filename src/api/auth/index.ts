@@ -24,8 +24,6 @@ export const signOut = () => {
 };
 
 export const refresh = ({ payload }: RefreshPayload) => {
-  console.log("This is Payload: ", payload);
-
   return httpClient
     .post(AUTH_ENDPOINTS.REFRESH, payload)
     .then((res) => res.data);

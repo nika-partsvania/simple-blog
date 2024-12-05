@@ -1,4 +1,3 @@
-import Loader from "@/components/loader/loader";
 import { useHttpInterceptor } from "@/hooks/useHttpInterceptor";
 import { useGetMe } from "@/react-query/query/auth";
 import { createContext, PropsWithChildren } from "react";
@@ -16,11 +15,9 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     accessToken,
   });
 
-  console.log(user);
-
   return (
-    <AuthContext.Provider value={{ user }}>
-      {isMeLoading || isRefreshLoading ? <Loader /> : children}
+    <AuthContext.Provider value={{ user, isMeLoading, isRefreshLoading }}>
+      {children}
     </AuthContext.Provider>
   );
 };
