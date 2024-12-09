@@ -14,3 +14,8 @@ export const setAuthorizationHeader = (accessToken: string) => {
 // APP -> Request -> Interceptor -> Backend -> Response -> APP
 
 // APP -> Request -> Backend -> Response -> Interceptor -> APP
+
+// CORS -
+
+// www.raghaca.com
+// www.sxvaraghaca.com/api - ბექმა უნდა დაამატოს whitelist - www.raghaca.com / *

@@ -1,101 +1,139 @@
-import { Button } from "@/components/common/button";
 import { Input } from "@/components/ui/input";
-import { Controller, useForm } from "react-hook-form";
+import CreateBlogForm from "@/pages/test/blogs/create";
+import { supabase } from "@/supabase";
 import qs from "qs";
+import { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
+import underscore from "underscore";
 
-type CountriesListFilterValues = {
-  name: string;
-  capital: string;
-  population: string;
-  food: string[];
+type SingleBlog = {
+  created_at: string;
+  description: string | null;
+  id: number;
+  image_url: string | null;
+  title: string | null;
+  user_id: string | null;
 };
 
-const CountriesListFilterFormDefaultValues = {
-  name: "",
-  capital: "",
-  population: "",
-  food: [],
+type BlogsFilterFormValues = {
+  searchText: string;
 };
+
+// const blogsFilterFormDefaultValues = {
+//   searchText: "",
+// };
 
 const TestView = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [blogs, setBlogs] = useState<SingleBlog[]>([]);
 
-  const parsedQueryParams = {
-    ...CountriesListFilterFormDefaultValues,
-    ...qs.parse(searchParams.toString()),
-  };
+  const [searchParams] = useSearchParams();
+  const parsedQueryParams = qs.parse(searchParams.toString());
 
-  console.log(parsedQueryParams);
-
-  const { control, handleSubmit } = useForm<CountriesListFilterValues>({
+  const { control, watch } = useForm<BlogsFilterFormValues>({
     defaultValues: parsedQueryParams,
   });
 
-  const onSubmit = (formValues: CountriesListFilterValues) => {
-    setSearchParams(
-      qs.stringify(formValues, {
-        skipNulls: true,
-        filter: (_, value) => {
-          return value || undefined;
-        },
-      }),
-    );
-  };
+  useEffect(() => {
+    const parsedSearchParams = qs.parse(searchParams.toString());
+
+    const searchText = parsedSearchParams?.searchText;
+
+    supabase
+      .from("blogs")
+      .select("*")
+      .ilike("title", `%${searchText ?? ""}%`)
+      .throwOnError()
+      .then((res) => {
+        const blogsList = res.data as unknown as SingleBlog[];
+        setBlogs(blogsList);
+      });
+  }, []);
+
+  const watchedSearchText = watch("searchText");
+
+  const fetchBlogs = useCallback(
+    underscore.debounce((watchedSearchText: string) => {
+      supabase
+        .from("blogs")
+        .select("*")
+        .ilike("title", `${watchedSearchText}%`)
+        .throwOnError()
+        .then((res) => {
+          const blogsList = res.data as unknown as SingleBlog[];
+          setBlogs(blogsList);
+        });
+    }, 500),
+    [],
+  );
+
+  useEffect(() => {
+    if (watchedSearchText?.length > 2) {
+      fetchBlogs(watchedSearchText);
+    }
+  }, [watchedSearchText, fetchBlogs]);
+
+  // const onSubmit = (searchFormValues: BlogsFilterFormValues) => {
+  //   const searchText = searchFormValues.searchText;
+
+  //   setSearchParams(
+  //     qs.stringify(searchFormValues, {
+  //       skipNulls: true,
+  //       filter: (_, value) => {
+  //         return value || undefined;
+  //       },
+  //     }),
+  //   );
+
+  //   supabase
+  //     .from("blogs")
+  //     .select("*")
+  //     .ilike("title", `${searchText}%`)
+  //     .throwOnError()
+  //     .then((res) => {
+  //       const blogsList = res.data as unknown as SingleBlog[];
+  //       setBlogs(blogsList);
+  //     });
+  // };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-4">
-      <div className="flex w-96 flex-col items-center justify-center gap-y-4">
+    <div className="flex flex-col gap-y-10">
+      <CreateBlogForm />
+      <div className="flex items-center justify-center gap-x-4 px-44">
         <Controller
           control={control}
-          name="name"
-          render={({ field: { onChange, value } }) => {
-            return (
-              <Input onChange={onChange} value={value} placeholder="Name" />
-            );
-          }}
-        />
-        <Controller
-          control={control}
-          name="capital"
-          render={({ field: { onChange, value } }) => {
-            return (
-              <Input onChange={onChange} value={value} placeholder="Capital" />
-            );
-          }}
-        />
-        <Controller
-          control={control}
-          name="population"
+          name="searchText"
           render={({ field: { onChange, value } }) => {
             return (
               <Input
                 onChange={onChange}
                 value={value}
-                placeholder="Population"
+                placeholder="Enter Search Text..."
               />
             );
           }}
         />
-        <Controller
-          control={control}
-          name="food.0"
-          render={({ field: { onChange, value } }) => {
-            return (
-              <Input onChange={onChange} value={value} placeholder="Food 1" />
-            );
-          }}
-        />
-        <Controller
-          control={control}
-          name="food.1"
-          render={({ field: { onChange, value } }) => {
-            return (
-              <Input onChange={onChange} value={value} placeholder="Food 2" />
-            );
-          }}
-        />
-        <Button onClick={handleSubmit(onSubmit)}>Filter</Button>
+        {/* <Button onClick={handleSubmit(onSubmit)}>Search</Button> */}
+      </div>
+      <div className="flex flex-col gap-y-10 px-32">
+        {blogs.map((blog) => {
+          const blogImageUrl = blog?.image_url
+            ? `${import.meta.env.VITE_SUPABASE_BLOG_IMAGES_STORAGE_URL}/${blog?.image_url}`
+            : "";
+
+          return (
+            <div
+              key={blog.id}
+              className="flex flex-col gap-y-4 border border-gray-400 p-6"
+            >
+              <div>
+                <img className="border border-black" src={blogImageUrl} />
+              </div>
+              <div>{blog?.title}</div>
+              <div>{blog?.description}</div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
