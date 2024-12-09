@@ -11,7 +11,8 @@
     "prettier": "prettier . --write",
     "preview": "vite preview",
     "prepare": "husky",
-    "run-db": "npx json-server database.json"
+    "run-db": "npx json-server database.json",
+    "generate-supa-types": "npx supabase gen types typescript --project-id eurofevokugoafysxpla --schema public > src/supabase/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

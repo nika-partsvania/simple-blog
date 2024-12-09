@@ -14,25 +14,35 @@ import AuthLayout from "@/layouts/auth";
 import IsUnauthorizedGuard from "@/components/route-guards/is-unauthorized";
 import IsAuthorizedGuard from "@/components/route-guards/is-authorized";
 import RootLayout from "@/layouts/root";
+import { useEffect } from "react";
+import { supabase } from "@/supabase";
+import { useSetAtom } from "jotai";
+import { userAtom } from "@/store/auth";
 
 function App() {
   const formMethods = useForm();
 
-  // const setUser = useSetAtom(userAtom);
+  const setUser = useSetAtom(userAtom);
 
-  // useEffect(() => {
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     setUser(session);
-  //   });
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session);
+    });
 
-  //   const {
-  //     data: { subscription },
-  //   } = supabase.auth.onAuthStateChange((_event, session) => {
-  //     setUser(session);
-  //   });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        supabase.auth.signInWithPassword({
+          email: "nika.partsvania22@gmail.com",
+          password: "Randompassword12#",
+        });
+      }
+      setUser(session);
+    });
 
-  //   return () => subscription.unsubscribe();
-  // }, [setUser]);
+    return () => subscription.unsubscribe();
+  }, [setUser]);
 
   return (
     <>
