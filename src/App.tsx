@@ -2,13 +2,11 @@
 import { Routes, Route } from "react-router-dom";
 import DashboardLayout from "./layouts/default";
 import NotFoundPage from "./pages/404";
-import TestView from "@/pages/test";
 import SingleCountryView from "@/pages/test/single-test";
 import LoginView from "@/pages/auth/view/login";
 // import { supabase } from "@/supabase";
 // import { useSetAtom } from "jotai";
 // import { userAtom } from "@/store/auth";
-import { FormProvider, useForm } from "react-hook-form";
 import RegisterView from "@/pages/auth/view/register";
 import AuthLayout from "@/layouts/auth";
 import IsUnauthorizedGuard from "@/components/route-guards/is-unauthorized";
@@ -18,10 +16,12 @@ import { useEffect } from "react";
 import { supabase } from "@/supabase";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/store/auth";
+import AdminLayout from "@/layouts/admin-layout";
+import UsersUpdateView from "@/pages/test/admin-pages/users/views/update";
+import UsersCreateView from "@/pages/test/admin-pages/users/views/create";
+import UsersListView from "@/pages/test/admin-pages/users/views/list";
 
 function App() {
-  const formMethods = useForm();
-
   const setUser = useSetAtom(userAtom);
 
   useEffect(() => {
@@ -61,6 +61,12 @@ function App() {
               <Route path="register" element={<RegisterView />} />
             </Route>
 
+            <Route path="admin" element={<AdminLayout />}>
+              <Route path="test" element={<UsersListView />} />
+              <Route path="test/create" element={<UsersCreateView />} />
+              <Route path="test/update/:id" element={<UsersUpdateView />} />
+            </Route>
+
             <Route
               path="dashboard"
               element={
@@ -69,14 +75,6 @@ function App() {
                 </IsUnauthorizedGuard>
               }
             >
-              <Route
-                path="test"
-                element={
-                  <FormProvider {...formMethods}>
-                    <TestView />
-                  </FormProvider>
-                }
-              />
               <Route path="contact" element={<div>Contact View</div>} />
               <Route path="test/:id" element={<SingleCountryView />} />
             </Route>
