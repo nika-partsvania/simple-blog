@@ -11,6 +11,10 @@ export const setAuthorizationHeader = (accessToken: string) => {
   httpClient.defaults.headers["Authorization"] = accessToken;
 };
 
+export const setAcceptLanguageHeader = (lang: "ka" | "en") => {
+  httpClient.defaults.headers["Accept-Language"] = lang;
+};
+
 // APP -> Request -> Interceptor -> Backend -> Response -> APP
 
 // APP -> Request -> Backend -> Response -> Interceptor -> APP

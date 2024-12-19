@@ -1,3 +1,4 @@
+import { ADMIN_PATHS } from "@/routes/admin/index.enum";
 import { Layout, Menu, MenuProps, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
@@ -11,7 +12,7 @@ const items2: MenuProps["items"] = [
     children: [
       {
         key: 0,
-        label: <Link to="test">Users</Link>,
+        label: <Link to={ADMIN_PATHS.TEST_LIST}>Users</Link>,
       },
     ],
   },
